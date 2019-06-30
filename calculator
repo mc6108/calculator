@@ -1,0 +1,55 @@
+<HTML>
+<Head>
+<Script Language=JavaScript>
+
+function calcPayment(isForm){
+
+	isValid = true;
+	if (isNaN(isForm.loan.value) || isNaN(isForm.nMonths.value) || isNaN(isForm.APR.value)){isValid = false}
+	Amt = parseFloat(isForm.loan.value);
+	IR = parseFloat(isForm.APR.value)/100/12;
+	N = parseInt(isForm.nMonths.value);
+	Pmt = Amt*IR/(1-(Math.pow((1+IR),-N)));
+	Pmt = Pmt.toFixed(2);
+	if (!isValid || isNaN(Pmt)){alert('Input numbers only.\nNo commas.');init()}
+	else {
+	      document.getElementById('isPmt').innerHTML = "$"+Pmt;
+	      loanStr = isForm.loan.value;
+	      hasCents = /\./.test(loanStr);
+	      if (!hasCents){isForm.loan.value = isForm.loan.value+".00"}
+	      monthStr = isForm.nMonths.value;
+	      fracMonth = /\./.test(monthStr)
+	      if (fracMonth){isForm.nMonths.value = monthStr.substring(0,monthStr.indexOf("."))}
+	     }
+}
+
+function clearForm(isForm){
+
+	isForm.reset();
+	document.getElementById('isPmt').innerHTML = "-0-"
+}
+
+function init(){
+
+	document.forms.Form1.reset();
+	document.forms.Form1.loan.focus();
+}
+
+window.onload=init;
+
+</Script>
+</Head>
+<Body>
+<br>
+<Form name='Form1'>
+<Table cellspacing='0' cellpadding='4' align='center' style='font-size:14pt;background-color:white;width:325;border:solid black 1px'>
+<THead><TH colspan='3' style='background-color:lightgrey;border-bottom:solid black 1px' align='center'>Calculator</TH></THead>
+<TR><TD>Amount: </TD><TD colspan='2' align='right'>$<input type=text size=10 name='loan' onclick="clearForm(this.form)"></TD></TR>
+<TR><TD>Rate: </TD><TD colspan='2' align='right'><input type=text size=5 name='APR'>%</TD></TR>
+<TR><TD>Months: </TD><TD colspan='2' align='right'><input type=text size=4 name='nMonths'></TD></TR>
+<TR><TD>Payment: </TD><TD></TD><TD id='isPmt' align='left' bgcolor='white'>-0-</TD></TR>
+<TR><TD align='center' colspan='3' style='border-top:solid black 1px;background-color:lightgrey'><input type=button style="background-color:firebrick;color:white;width:150px;height:45px;"  value="Calculate" onclick="calcPayment(this.form)"></TD</TR>
+</Table>
+</Form>
+</Body>
+</HTML>
